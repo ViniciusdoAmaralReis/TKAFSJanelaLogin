@@ -26,14 +26,15 @@ type
     procedure Retornar(Sender: TObject);
     procedure Logar(Sender: TObject);
     procedure CancelarLogar(Sender: TObject);
-    procedure Sair(Sender: TObject);
+    procedure ConfirmarDeslogar(Sender: TObject);
+    procedure Deslogar(Sender: TObject);
     destructor Destroy; override;
   end;
 
 implementation
 
 uses
-  UntKAFSFuncoes;
+  UntKAFSFuncoes, UntKAFSTelaMensagem;
 
 constructor TKAFSJanelaLogin.Create(AOwner: TComponent);
 begin
@@ -115,19 +116,22 @@ begin
         LabEmail.Text := LerIni('cache', 'login', 'email');
 
         // Muda descrição do botão
-        BtnConfirmar.LabDescricao.Text := 'Sair ❯';
-        BtnConfirmar.OnClick := Sair;
+        BtnConfirmar.LabDescricao.Text := 'Deslogar ❯';
+        BtnConfirmar.OnClick := ConfirmarDeslogar;
 
         // Torna a tela visível
         Visible := True;
       end);
     end;
   end
-  // Não exste um histórico
+  // Não existe um histórico
   else
     TThread.Synchronize(nil, procedure
     begin
       // Configura elementos padrões
+      {$IFDEF ANDROID}
+      BtnVoltar.Visible := False;
+      {$ENDIF}
       ImgUsuario.Bitmap := URLParaBmp('https://imagepng.org/wp-content/uploads/2019/08/google-icon-4.png');
       BtnConfirmar.OnClick := Logar;
 
@@ -185,7 +189,18 @@ begin
     FreeAndNil(LoginGoogle);
 end;
 
-procedure TKAFSJanelaLogin.Sair(Sender: TObject);
+procedure TKAFSJanelaLogin.ConfirmarDeslogar(Sender: TObject);
+begin
+  var Mensagem := TKAFSTelaMensagem.Create(Parent);
+  Mensagem.KAFSTelaMensagemConfig(
+    Labtitulo.FontColor,
+    RecCorpo.Fill.Color,
+    'Confirmar',
+    'Deseja deslogar usuário?',
+    '✓',
+    Deslogar);
+end;
+procedure TKAFSJanelaLogin.Deslogar(Sender: TObject);
 begin
   // Zera histórico
   SalvarIni('cache', 'login', 'imagem', '');
@@ -196,7 +211,10 @@ begin
   // Se a tela for finalizada, finaliza todo o sistema
   Finalizar := True;
 
-  // Limpa componentes
+  // Reseta componentes
+  {$IFDEF ANDROID}
+  BtnVoltar.Visible := False;
+  {$ENDIF}
   ImgUsuario.Bitmap := URLParaBmp('https://imagepng.org/wp-content/uploads/2019/08/google-icon-4.png');
   LabEmail.Text := '';
 
