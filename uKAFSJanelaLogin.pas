@@ -5,7 +5,7 @@ interface
 uses
   System.Classes, System.SysUtils, System.Threading, System.UITypes,
   FMX.Forms, FMX.Graphics, FMX.Layouts, FMX.Objects, FMX.StdCtrls, FMX.Types,
-  UntKAFSJanelaModal, UntKAFSLoginGoogle, UntKAFSTelaProgresso;
+  uKAFSJanelaModal, uKAFSLoginGoogle, uKAFSTelaProgresso;
 
 type
   TKAFSJanelaLogin = class(TKAFSJanelaModal)
@@ -34,7 +34,7 @@ type
 implementation
 
 uses
-  UntKAFSFuncoes, UntKAFSJanelaMensagem;
+  uKAFSFuncoes, uKAFSJanelaMensagem;
 
 constructor TKAFSJanelaLogin.Create(AOwner: TComponent);
 begin
