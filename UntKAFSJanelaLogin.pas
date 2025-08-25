@@ -34,7 +34,7 @@ type
 implementation
 
 uses
-  UntKAFSFuncoes, UntKAFSTelaMensagem;
+  UntKAFSFuncoes, UntKAFSJanelaMensagem;
 
 constructor TKAFSJanelaLogin.Create(AOwner: TComponent);
 begin
@@ -73,7 +73,7 @@ end;
 procedure TKAFSJanelaLogin.KAFSJanelaLoginConfig(const _cortema1, _cortema2: TAlphaColor; _imgusuario: TBitmap; _clientidgoogle, _clientsecretgoogle: String; _aposlogin: TNotifyEvent);
 begin
   // Configura propriedades da tela padrão
-  KAFSJanelaModalConfig(_cortema1, _cortema2, 'Usuário', 'Entrar com Google ❯');
+  KAFSJanelaModalConfig(_cortema1, _cortema2, 'Usuário', '👤', 'Entrar com Google ❯');
 
   // Associa procedures aos botões
   BtnVoltar.OnClick := Retornar;
@@ -191,8 +191,8 @@ end;
 
 procedure TKAFSJanelaLogin.ConfirmarDeslogar(Sender: TObject);
 begin
-  var Mensagem := TKAFSTelaMensagem.Create(Parent);
-  Mensagem.KAFSTelaMensagemConfig(
+  var _mensagem := TKAFSJanelaMensagem.Create(Parent);
+  _mensagem.KAFSJanelaMensagemConfig(
     Labtitulo.FontColor,
     RecCorpo.Fill.Color,
     'Confirmar',
@@ -230,7 +230,16 @@ destructor TKAFSJanelaLogin.Destroy;
 begin
   CancelarLogar(nil);
 
-  inherited;
+  if Assigned(LabEmail) then
+    FreeAndNil(LabEmail);
+
+  if Assigned(ImgUsuario) then
+    FreeAndNil(ImgUsuario);
+
+  if Assigned(ScbCorpo) then
+    FreeAndNil(ScbCorpo);
+
+  inherited Destroy;
 end;
 
 end.
