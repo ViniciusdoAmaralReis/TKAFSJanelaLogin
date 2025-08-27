@@ -9,9 +9,9 @@ uses
 
 type
   TKAFSJanelaLogin = class(TKAFSJanelaModal)
-    ScbCorpo: TScrollBox;
-    ImgUsuario: TImage;
-    LabEmail: TLabel;
+    scrollCorpo: TScrollBox;
+    imgUsuario: TImage;
+    labEmail: TLabel;
   public
     TelaProgresso: TKAFSTelaProgresso;
     LoginGoogle: TKAFSLoginGoogle;
@@ -40,28 +40,28 @@ constructor TKAFSJanelaLogin.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
-  ScbCorpo := TScrollBox.Create(Self);
-  with ScbCorpo do
+  scrollCorpo := TScrollBox.Create(Self);
+  with scrollCorpo do
   begin
     Align := TAlignLayout.Client;
-    Parent := RecCorpo;
+    Parent := rectCorpo;
   end;
 
-  ImgUsuario := TImage.Create(Self);
-  with ImgUsuario do
+  imgUsuario := TImage.Create(Self);
+  with imgUsuario do
   begin
     Align := TAlignLayout.VertCenter;
     Height := 300;
-    Parent := ScbCorpo;
+    Parent := scrollCorpo;
     WrapMode := TImageWrapMode.Center;
   end;
 
-  LabEmail := TLabel.Create(Self);
-  with LabEmail do
+  labEmail := TLabel.Create(Self);
+  with labEmail do
   begin
     Align := TAlignLayout.Client;
     Font.Family := 'Segoe UI Emoji';
-    Font.Size := 24;
+    Font.Size := 20;
     Font.Style := [];
     Parent := ImgUsuario;
     StyledSettings := [];
@@ -76,10 +76,10 @@ begin
   KAFSJanelaModalConfig(_cortema1, _cortema2, 'Usuário', '👤', 'Entrar com Google ❯');
 
   // Associa procedures aos botões
-  BtnVoltar.OnClick := Retornar;
+  btnVoltar.btnBotao.OnClick := Retornar;
 
   // Texto e cor da fonte
-  LabEmail.TextSettings.FontColor := _cortema1;
+  labEmail.TextSettings.FontColor := _cortema1;
 
   // Alimenta variáveis da classe com as chaves fornecidas
   ClientIDGoogle := _clientidgoogle;
@@ -110,14 +110,14 @@ begin
       TThread.Synchronize(nil, procedure
       begin
         // Busca o caminho no histórico e converte a imagem da web para bitmap
-        ImgUsuario.Bitmap := URLParaBmp(LerIni('cache', 'login', 'imagem'));
+        imgUsuario.Bitmap := URLParaBmp(LerIni('cache', 'login', 'imagem'));
 
         // Busca referência no histórico
-        LabEmail.Text := LerIni('cache', 'login', 'email');
+        labEmail.Text := LerIni('cache', 'login', 'email');
 
         // Muda descrição do botão
-        BtnConfirmar.LabDescricao.Text := 'Deslogar ❯';
-        BtnConfirmar.OnClick := ConfirmarDeslogar;
+        btnConfirmar.LabDescricao.Text := 'Deslogar ❯';
+        btnConfirmar.btnBotao.OnClick := ConfirmarDeslogar;
 
         // Torna a tela visível
         Visible := True;
@@ -130,10 +130,10 @@ begin
     begin
       // Configura elementos padrões
       {$IFDEF ANDROID}
-      BtnVoltar.Visible := False;
+      btnVoltar.Visible := False;
       {$ENDIF}
-      ImgUsuario.Bitmap := URLParaBmp('https://imagepng.org/wp-content/uploads/2019/08/google-icon-4.png');
-      BtnConfirmar.OnClick := Logar;
+      imgUsuario.Bitmap := URLParaBmp('https://imagepng.org/wp-content/uploads/2019/08/google-icon-4.png');
+      btnConfirmar.btnBotao.OnClick := Logar;
 
       Visible := True;
     end);
@@ -159,7 +159,7 @@ begin
     LoginGoogle := TKAFSLoginGoogle.Create;
     try
       // Atualiza o progresso
-      TelaProgresso.Progresso(LabTitulo.FontColor, RecCorpo.Fill.Color, 'Aguardando dados do navegador', 1, 1, CancelarLogar);
+      TelaProgresso.Progresso(labTitulo.FontColor, rectCorpo.Fill.Color, 'Aguardando dados do navegador', 1, 1, CancelarLogar);
 
       // Variável recebe conteúdo de função login
       var _login := LoginGoogle.Login(ClientIDGoogle, ClientSecretGoogle);
@@ -193,10 +193,10 @@ procedure TKAFSJanelaLogin.ConfirmarDeslogar(Sender: TObject);
 begin
   var _mensagem := TKAFSJanelaMensagem.Create(Parent);
   _mensagem.KAFSJanelaMensagemConfig(
-    Labtitulo.FontColor,
-    RecCorpo.Fill.Color,
+    labtitulo.FontColor,
+    rectCorpo.Fill.Color,
     'Confirmar',
-    'Deseja deslogar usuário?',
+    'Deseja deslogar o usuário?',
     '✓',
     Deslogar);
 end;
@@ -213,16 +213,16 @@ begin
 
   // Reseta componentes
   {$IFDEF ANDROID}
-  BtnVoltar.Visible := False;
+  btnVoltar.Visible := False;
   {$ENDIF}
-  ImgUsuario.Bitmap := URLParaBmp('https://imagepng.org/wp-content/uploads/2019/08/google-icon-4.png');
-  LabEmail.Text := '';
+  imgUsuario.Bitmap := URLParaBmp('https://imagepng.org/wp-content/uploads/2019/08/google-icon-4.png');
+  labEmail.Text := '';
 
-  with BtnConfirmar do
+  with btnConfirmar do
   begin
-    LabDescricao.Text := 'Entrar com Google ❯';
+    labDescricao.Text := 'Entrar com Google ❯';
 
-    OnClick := Logar;
+    btnBotao.OnClick := Logar;
   end;
 end;
 
@@ -230,14 +230,14 @@ destructor TKAFSJanelaLogin.Destroy;
 begin
   CancelarLogar(nil);
 
-  if Assigned(LabEmail) then
-    FreeAndNil(LabEmail);
+  if Assigned(labEmail) then
+    FreeAndNil(labEmail);
 
-  if Assigned(ImgUsuario) then
-    FreeAndNil(ImgUsuario);
+  if Assigned(imgUsuario) then
+    FreeAndNil(imgUsuario);
 
-  if Assigned(ScbCorpo) then
-    FreeAndNil(ScbCorpo);
+  if Assigned(scrollCorpo) then
+    FreeAndNil(scrollCorpo);
 
   inherited Destroy;
 end;
