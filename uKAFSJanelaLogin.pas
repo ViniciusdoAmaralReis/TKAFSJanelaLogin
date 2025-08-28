@@ -21,7 +21,7 @@ type
     AposLogin: TNotifyEvent;
     Finalizar: Boolean;
 
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent); reintroduce;
     procedure KAFSJanelaLoginConfig(const _cortema1, _cortema2: TAlphaColor; _imgusuario: TBitmap; _clientidgoogle, _clientsecretgoogle: String; _aposlogin: TNotifyEvent);
     procedure Retornar(Sender: TObject);
     procedure Logar(Sender: TObject);
@@ -95,7 +95,7 @@ begin
   var _email := LerIni('cache', 'login', 'email');
   if _email <> '' then
   begin
-    // Indica que é uma abertura inicial
+    // Verifica se é uma abertura inicial
     if _imgusuario = nil then
     begin
       AposLogin(nil);
@@ -109,10 +109,10 @@ begin
 
       TThread.Synchronize(nil, procedure
       begin
-        // Busca o caminho no histórico e converte a imagem da web para bitmap
+        // Converte a imagem da web para bitmap
         imgUsuario.Bitmap := URLParaBmp(LerIni('cache', 'login', 'imagem'));
 
-        // Busca referência no histórico
+        // Busca referência na classe
         labEmail.Text := LerIni('cache', 'login', 'email');
 
         // Muda descrição do botão
@@ -229,15 +229,6 @@ end;
 destructor TKAFSJanelaLogin.Destroy;
 begin
   CancelarLogar(nil);
-
-  if Assigned(labEmail) then
-    FreeAndNil(labEmail);
-
-  if Assigned(imgUsuario) then
-    FreeAndNil(imgUsuario);
-
-  if Assigned(scrollCorpo) then
-    FreeAndNil(scrollCorpo);
 
   inherited Destroy;
 end;
