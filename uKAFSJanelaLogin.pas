@@ -63,6 +63,7 @@ begin
     Font.Family := 'Segoe UI Emoji';
     Font.Size := 20;
     Font.Style := [];
+    Height := 50;
     Parent := ImgUsuario;
     StyledSettings := [];
     TextSettings.HorzAlign := TTextAlign.Center;
